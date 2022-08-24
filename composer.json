@@ -1,0 +1,34 @@
+{
+    "name": "stepanenko3/laravel-pagination",
+    "version": "1.0.0",
+    "description": "Great pagination generator for Laravel",
+    "keywords": [
+        "laravel",
+        "paginate",
+        "pagination",
+        "nav",
+        "navigation"
+    ],
+    "homepage": "https://github.com/stepanenko3/laravel-pagination",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artem Stepanenko",
+            "email": "stpnnk.artem@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stepanenko3\\LaravelPagination\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
