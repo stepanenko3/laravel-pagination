@@ -1,6 +1,5 @@
 {
     "name": "stepanenko3/laravel-pagination",
-    "version": "1.0.0",
     "description": "Great pagination generator for Laravel",
     "keywords": [
         "laravel",
