@@ -10,9 +10,13 @@ Great pagination generator for Laravel
 
 ## Examples
 
+```
 1, 2, 3, 4, 5, ..., 20
+
 1, ..., 12, 13, 14, ..., 20
+
 1, ..., 16, 17, 18, 19, 20
+```
 
 ## Requirements
 
