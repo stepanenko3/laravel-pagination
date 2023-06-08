@@ -119,27 +119,22 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
      */
     public function linkCollection()
     {
-        return collect($this->elements())->flatMap(function ($item) {
-            if (!is_array($item)) {
-                return [['url' => null, 'label' => '...', 'active' => false]];
-            }
-
-            return collect($item)->map(function ($url, $page) {
-                return [
-                    'url' => $url,
-                    'label' => (string) $page,
-                    'active' => $this->currentPage() === $page,
-                ];
-            });
-        })->prepend([
-            'url' => $this->previousPageUrl(),
-            'label' => function_exists('__') ? __('pagination.previous') : 'Previous',
-            'active' => false,
-        ])->push([
-            'url' => $this->nextPageUrl(),
-            'label' => function_exists('__') ? __('pagination.next') : 'Next',
-            'active' => false,
-        ]);
+        return collect($this->elements())
+            ->map(fn ($item) => [
+                'url' => $item['url'],
+                'label' => (string) $item['page'],
+                'active' => $item['active'],
+            ])
+            ->prepend([
+                'url' => $this->previousPageUrl(),
+                'label' => function_exists('__') ? __('pagination.previous') : 'Previous',
+                'active' => false,
+            ])
+            ->push([
+                'url' => $this->nextPageUrl(),
+                'label' => function_exists('__') ? __('pagination.next') : 'Next',
+                'active' => false,
+            ]);
     }
 
     /**
@@ -147,7 +142,7 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
      *
      * @return \Illuminate\Support\Collection
      */
-    protected function elements(): Collection
+    public function elements(): Collection
     {
         return collect($this->data())
             ->map(fn ($page) => [
