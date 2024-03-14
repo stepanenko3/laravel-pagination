@@ -5,9 +5,9 @@ namespace Stepanenko3\LaravelPagination;
 use ArrayAccess;
 use Countable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use IteratorAggregate;
 use JsonSerializable;
@@ -16,15 +16,11 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 {
     /**
      * The total number of items before slicing.
-     *
-     * @var int
      */
     protected int $total;
 
     /**
      * The last available page.
-     *
-     * @var int
      */
     protected int $lastPage;
 
@@ -33,12 +29,11 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     /**
      * Create a new paginator instance.
      *
-     * @param  mixed  $items
-     * @param  int  $total
-     * @param  int  $perPage
-     * @param  int|null  $currentPage
-     * @param  array  $options  (path, query, fragment, pageName)
-     * @return void
+     * @param mixed $items
+     * @param int $total
+     * @param int $perPage
+     * @param null|int $currentPage
+     * @param array $options (path, query, fragment, pageName)
      */
     public function __construct($items, $total, $perPage, $currentPage = null, array $options = [])
     {
@@ -57,39 +52,11 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     }
 
     /**
-     * Get the current page for the request.
-     *
-     * @param  int  $currentPage
-     * @param  string  $pageName
-     * @return int
-     */
-    protected function setCurrentPage($currentPage, $pageName)
-    {
-        $currentPage = $currentPage ?: static::resolveCurrentPage($pageName);
-
-        return $this->getValidPageNumber($currentPage);
-    }
-
-    protected function getValidPageNumber($page)
-    {
-        if (filter_var($page, FILTER_VALIDATE_INT) !== false) {
-            if ($page < 1)
-                return 1;
-
-            if ($page > $this->lastPage)
-                return $this->lastPage;
-
-            return $page;
-        }
-
-        return 1;
-    }
-
-    /**
      * Render the paginator using the given view.
      *
-     * @param  string|null  $view
-     * @param  array  $data
+     * @param null|string $view
+     * @param array $data
+     *
      * @return \Illuminate\Contracts\Support\Htmlable
      */
     public function links($view = null, $data = [])
@@ -100,8 +67,9 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     /**
      * Render the paginator using the given view.
      *
-     * @param  string|null  $view
-     * @param  array  $data
+     * @param null|string $view
+     * @param array $data
+     *
      * @return \Illuminate\Contracts\Support\Htmlable
      */
     public function render($view = null, $data = [])
@@ -115,7 +83,7 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     /**
      * Get the paginator links as a collection (for JSON responses).
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function linkCollection()
     {
@@ -139,8 +107,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 
     /**
      * Get the array of elements to pass to the view.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function elements(): Collection
     {
@@ -154,8 +120,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 
     /**
      * Get the array of elements to pass to the view.
-     *
-     * @return array
      */
     public function data(): array
     {
@@ -173,8 +137,8 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
         ];
 
         if ($range->start - 1 === 1 || $range->end + 1 === $this->lastPage) {
-            $range->start += 1;
-            $range->end += 1;
+            $range->start++;
+            $range->end++;
         }
 
         $pages = $this->currentPage > $delta
@@ -190,8 +154,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
         }
 
         return $pages;
-
-
         // $startPage = 1;
         // $endPage = $this->lastPage;
 
@@ -246,15 +208,8 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
         // return array_merge($beforePages, [$pages], $afterPages);
     }
 
-
-    private function withDots($pages, $value, $pair) {
-        return count($pages) + 1 !== $this->lastPage ? $pair : [$value];
-    }
-
     /**
      * Get the total number of items being paginated.
-     *
-     * @return int
      */
     public function total(): int
     {
@@ -263,8 +218,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 
     /**
      * Determine if there are more items in the data source.
-     *
-     * @return bool
      */
     public function hasMorePages(): bool
     {
@@ -273,8 +226,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 
     /**
      * Get the last page.
-     *
-     * @return int
      */
     public function lastPage(): int
     {
@@ -309,7 +260,9 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     {
         $end = $this->currentPage <= 1 ? $this->perPage : ($this->currentPage * $this->perPage);
 
-        if ($end > $this->total) $end = $this->total;
+        if ($end > $this->total) {
+            $end = $this->total;
+        }
 
         return $end;
     }
@@ -383,8 +336,6 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
 
     /**
      * Convert the object into something JSON serializable.
-     *
-     * @return array
      */
     public function jsonSerialize(): array
     {
@@ -394,11 +345,49 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
     /**
      * Convert the object to its JSON representation.
      *
-     * @param  int  $options
+     * @param int $options
+     *
      * @return string
      */
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
+    }
+
+    /**
+     * Get the current page for the request.
+     *
+     * @param int $currentPage
+     * @param string $pageName
+     *
+     * @return int
+     */
+    protected function setCurrentPage($currentPage, $pageName)
+    {
+        $currentPage = $currentPage ?: static::resolveCurrentPage($pageName);
+
+        return $this->getValidPageNumber($currentPage);
+    }
+
+    protected function getValidPageNumber($page)
+    {
+        if (filter_var($page, FILTER_VALIDATE_INT) !== false) {
+            if ($page < 1) {
+                return 1;
+            }
+
+            if ($page > $this->lastPage) {
+                return $this->lastPage;
+            }
+
+            return $page;
+        }
+
+        return 1;
+    }
+
+    private function withDots($pages, $value, $pair)
+    {
+        return count($pages) + 1 !== $this->lastPage ? $pair : [$value];
     }
 }
