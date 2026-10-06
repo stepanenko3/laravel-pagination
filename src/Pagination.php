@@ -248,7 +248,7 @@ class Pagination extends AbstractPaginator implements Arrayable, ArrayAccess, Co
             return 100;
         }
 
-        return ($this->currentPage - 1) / ($this->lastPage - 1) * 100;
+        return (int) (($this->currentPage - 1) / ($this->lastPage - 1) * 100);
     }
 
     public function start(): int
